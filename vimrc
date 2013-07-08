@@ -34,43 +34,58 @@ Bundle 'gmarik/vundle'
 "" Vundle install packages
 "*****************************************************************************
 "{{{
+
+" Open files
 Bundle 'scrooloose/nerdtree'
 Bundle 'scrooloose/nerdcommenter'
-Bundle 'wincent/Command-T'
 Bundle 'kien/ctrlp.vim'
+
+" Python
 Bundle 'fs111/pydoc.vim'
-Bundle 'vim-scripts/ZoomWin'
-Bundle 'vim-scripts/closetag.vim'
-Bundle 'vim-scripts/django.vim'
-Bundle 'avelino/london.vim'
 Bundle 'vim-scripts/pytest.vim'
 Bundle 'Soares/python.vim'
-Bundle 'ervandew/supertab'
-Bundle 'majutsushi/tagbar'
-Bundle 'tpope/vim-fugitive'
-Bundle 'avelino/flux.vim'
-Bundle 'tomasr/molokai'
-Bundle 'plasticboy/vim-markdown'
-Bundle 'jg/bufexplorer'
-Bundle 'fholgado/minibufexpl.vim'
-Bundle 'lunaru/vim-less'
-Bundle 'mattn/zencoding-vim'
-Bundle 'Lokaltog/vim-powerline'
-Bundle 'nvie/vim-flake8'
-Bundle 'rodjek/vim-puppet'
-Bundle 'vim-scripts/pep8'
-Bundle 'mileszs/ack.vim'
-Bundle 'tomtom/tlib_vim'
-Bundle 'airblade/vim-gitgutter'
-Bundle 'hynek/vim-python-pep8-indent'
 Bundle 'vim-scripts/pylint.vim'
 Bundle 'pyflakes.vim'
-Bundle 'rson/vim-conque'
+Bundle 'nvie/vim-flake8'
+Bundle 'vim-scripts/pep8'
+Bundle 'hynek/vim-python-pep8-indent'
 
-Bundle "MarcWeber/vim-addon-mw-utils"
-Bundle "tomtom/tlib_vim"
-Bundle "honza/vim-snippets"
+" Theme
+Bundle 'vim-scripts/django.vim'
+Bundle 'avelino/flux.vim'
+Bundle 'tomasr/molokai'
+
+" Auto-completion
+Bundle 'ervandew/supertab'
 Bundle 'garbas/vim-snipmate'
+
+" Taglist like
+Bundle 'majutsushi/tagbar'
+
+" Git ?
+Bundle 'tpope/vim-fugitive'
+Bundle 'airblade/vim-gitgutter'
+
+" Buf exp
+Bundle 'jg/bufexplorer'
+Bundle 'fholgado/minibufexpl.vim'
+
+" Syntex
+Bundle 'rodjek/vim-puppet'
+Bundle "honza/vim-snippets"
+
+" Web language
+Bundle 'lunaru/vim-less'
+Bundle 'vim-scripts/closetag.vim'
+Bundle 'avelino/london.vim'
+Bundle 'mattn/zencoding-vim'
+Bundle 'plasticboy/vim-markdown'
+
+" Others
+Bundle 'Lokaltog/vim-powerline'
+Bundle 'mileszs/ack.vim'
+Bundle "MarcWeber/vim-addon-mw-utils"
+Bundle 'tomtom/tlib_vim'
 
 " Installing plugins the first time
 if iCanHazVundle == 0
@@ -372,7 +387,7 @@ au FileType make set noexpandtab
 
 
 "********** Python
-autocmd FileType python setlocal expandtab shiftwidth=4 tabstop=8 colorcolumn=79
+autocmd FileType python setlocal expandtab shiftwidth=4 tabstop=8
       \ formatoptions+=croq softtabstop=4 smartindent
       \ cinwords=if,elif,else,for,while,try,except,finally,def,class,with
 autocmd FileType pyrex setlocal expandtab shiftwidth=4 tabstop=8 softtabstop=4
@@ -410,16 +425,16 @@ autocmd FileType css set omnifunc=csscomplete#CompleteCSS
 
 
 "********** C/Obj-C/C++
-autocmd FileType c setlocal tabstop=4 softtabstop=4 shiftwidth=4 expandtab colorcolumn=79
-autocmd FileType cpp setlocal tabstop=4 softtabstop=4 shiftwidth=4 expandtab colorcolumn=79
-autocmd FileType objc setlocal tabstop=4 softtabstop=4 shiftwidth=4 expandtab colorcolumn=79
+autocmd FileType c setlocal tabstop=4 softtabstop=4 shiftwidth=4 expandtab
+autocmd FileType cpp setlocal tabstop=4 softtabstop=4 shiftwidth=4 expandtab
+autocmd FileType objc setlocal tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 
 "********** vim
 autocmd FileType vim setlocal expandtab shiftwidth=2 tabstop=8 softtabstop=2
 autocmd FileType vim setlocal foldenable foldmethod=marker
 
 "********** Javascript
-autocmd FileType javascript setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2 colorcolumn=79
+autocmd FileType javascript setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
 autocmd BufNewFile,BufRead *.json setlocal ft=javascript
 " code completion
 autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
