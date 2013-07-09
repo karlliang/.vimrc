@@ -39,6 +39,7 @@ Bundle 'gmarik/vundle'
 Bundle 'scrooloose/nerdtree'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'kien/ctrlp.vim'
+Bundle 'vim-scripts/FindFile'
 
 " Python
 Bundle 'fs111/pydoc.vim'
@@ -68,11 +69,11 @@ Bundle 'airblade/vim-gitgutter'
 
 " Buf exp
 Bundle 'jg/bufexplorer'
-Bundle 'fholgado/minibufexpl.vim'
 
 " Syntex
 Bundle 'rodjek/vim-puppet'
-Bundle "honza/vim-snippets"
+Bundle 'honza/vim-snippets'
+Bundle 'scrooloose/syntastic'
 
 " Web language
 Bundle 'lunaru/vim-less'
@@ -83,9 +84,13 @@ Bundle 'plasticboy/vim-markdown'
 
 " Others
 Bundle 'Lokaltog/vim-powerline'
-Bundle 'mileszs/ack.vim'
-Bundle "MarcWeber/vim-addon-mw-utils"
+Bundle 'MarcWeber/vim-addon-mw-utils'
 Bundle 'tomtom/tlib_vim'
+Bundle 'carlobaldassi/ConqueTerm'
+Bundle 'vim-scripts/Gundo'
+Bundle 'vim-scripts/c.vim'
+Bundle 'vim-scripts/a.vim'
+Bundle 'vim-scripts/grep.vim'
 
 " Installing plugins the first time
 if iCanHazVundle == 0
@@ -287,7 +292,7 @@ let NERDTreeSortOrder=['^__\.py$', '\/$', '*', '\.swp$',  '\.bak$', '\~$']
 let NERDTreeShowBookmarks=1
 
 " Command-T configuration
-let g:CommandTMaxHeight=20
+"let g:CommandTMaxHeight=20
 
 " FindFile
 let g:FindFileIgnore = ['*.o', '*.pyc', '*.py~', '*.obj', '.git', '*.rbc', '*/tmp/*', '__pycache__']
@@ -404,16 +409,6 @@ autocmd BufNewFile,BufRead *.py_tmpl,*.cover setlocal ft=python
 " code completion
 autocmd FileType python set omnifunc=pythoncomplete#Complete
 
-"********** Go
-autocmd BufNewFile,BufRead *.go setlocal ft=go
-autocmd FileType go setlocal expandtab shiftwidth=4 tabstop=8 softtabstop=4
-
-"********** PHP
-autocmd FileType php setlocal shiftwidth=4 tabstop=8 softtabstop=4 expandtab
-
-"********** Verilog
-autocmd FileType verilog setlocal expandtab shiftwidth=2 tabstop=8 softtabstop=2
-
 "********** HTML
 autocmd BufNewFile,BufRead *.mako,*.mak,*.jinja2 setlocal ft=html
 autocmd FileType html,xhtml,xml,htmldjango,htmljinja,londonhtml,eruby,mako,haml,daml,css,tmpl setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
@@ -422,7 +417,6 @@ autocmd FileType html,xhtml,xml,htmldjango,htmljinja,londonhtml,eruby,mako,haml,
 " code completion
 autocmd FileType html set omnifunc=htmlcomplete#CompleteTags
 autocmd FileType css set omnifunc=csscomplete#CompleteCSS
-
 
 "********** C/Obj-C/C++
 autocmd FileType c setlocal tabstop=4 softtabstop=4 shiftwidth=4 expandtab
@@ -439,21 +433,6 @@ autocmd BufNewFile,BufRead *.json setlocal ft=javascript
 " code completion
 autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
 
-"********** Cmake
-autocmd BufNewFile,BufRead CMakeLists.txt setlocal ft=cmake
-
-"********** Ruby
-" Thorfile, Rakefile and Gemfile are Ruby
-au BufRead,BufNewFile {Gemfile,Rakefile,Thorfile,config.ru}    set ft=ruby
-
-"********** Markdown
-" md, markdown, and mk are markdown and define buffer-local preview
-au BufRead,BufNewFile *.{md,markdown,mdown,mkd,mkdn} call s:setupMarkup()
-
-"********** Markdown
-au BufNewFile,BufRead *.dartset filetype=dart shiftwidth=2 expandtab
-
-
 "}}}
 
 
@@ -466,9 +445,13 @@ au BufNewFile,BufRead *.dartset filetype=dart shiftwidth=2 expandtab
 noremap <C-K> :!python<CR>
 noremap <C-L> :!python %<CR>
 
+" ConqueTerm Shortcut
+noremap <Leader>sh :ConqueTerm bash --login<CR>
+
 " Split Screen
 noremap <Leader>h :split<CR>
 noremap <Leader>v :vsplit<CR>
+map <leader>d <c-w>c
 
 " Git
 noremap <Leader>ga :!git add .<CR>
@@ -478,43 +461,42 @@ noremap <Leader>gs :Gstatus<CR>
 noremap <Leader>gd :Gvdiff<CR>
 noremap <Leader>gr :Gremove<CR>
 
-" ConqueTerm Shortcut
-noremap <Leader>sh :ConqueTerm bash --login<CR>
-
-" Paste to DPaste: http://dpaste.com/
-noremap <Leader>p :Dpaste<CR>
-
 " NerdTree shortcuts
 noremap <Leader>n :NERDTreeToggle<CR>
-noremap <Plug> :NERDTreeToggle<CR>
-nnoremap <leader>d :NERDTreeToggle<CR>
-noremap <F3> :NERDTreeToggle<CR>
 
-" ZoomWin configuration
-noremap <Leader>z :ZoomWin<CR>
+" Tag Code Navigation
+nnoremap <Leader>l :TagbarToggle<CR>
 
 " BufExplorer configuration
-nnoremap <leader>b :BufExplorer<cr>
+nnoremap <Leader>b :BufExplorer<cr>
 
 " Tabs shortcuts
-noremap th :tabnext<CR>
-noremap t] :tabnext<CR>
-noremap tl :tabprev<CR>
-noremap t[ :tabprev<CR>
-noremap tn :tabnew<CR>
-noremap tc :tabclose<CR>
-noremap td :tabclose<CR>
-
-" Set working directory
-nnoremap <leader>. :lcd %:p:h<CR>
-
-" Opens an edit command with the path of the currently edited file filled in
-" Normal mode: <Leader>e
-noremap <Leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
+noremap fj :tabnext<CR>
+noremap fk :tabprev<CR>
+noremap fc :tabnew<CR>
+noremap fd :tabclose<CR>
 
 " Opens a tab edit command with the path of the currently edited file filled in
 " Normal mode: <Leader>t
-noremap <Leader>te :tabe <C-R>=expand("%:p:h") . "/" <CR>
+noremap fe :tabe <C-R>=expand("%:p:h") . "/" <CR>
+
+noremap fq :qa<CR>
+noremap fQ :qa!<CR>
+noremap fw :w<CR>
+noremap fW :w!<CR>
+
+" Termnal nav
+noremap ,k :bp<CR>
+noremap ,j :bn<CR>
+noremap ,l :ls<CR>
+noremap ,d :bd<CR>
+
+" Opens an edit command with the path of the currently edited file filled in
+" Normal mode: <Leader>e
+noremap ,e :e <C-R>=expand("%:p:h") . "/" <CR>
+
+" Set working directory
+nnoremap <leader>. :lcd %:p:h<CR>
 
 " Inserts the path of the currently edited file into a command
 " ctrlp
@@ -535,28 +517,18 @@ vnoremap <C-Down> ]egv
 nmap <Down> gj
 nmap <Up> gk
 
+" Optional key-map (> 7.3)
 " Gundo Toggler
 nnoremap <Leader>u :GundoToggle<CR>
 noremap <leader>c :GundoToggle<CR>
 
-" Tag Code Navigation
-nnoremap <Leader>f :TagbarToggle<CR>
-
 " Find file
-nnoremap <C-f> :FF<CR>
-nnoremap <C-s> :FS<CR>
-nnoremap <C-c> :FC .<CR>
+noremap .f :FF<CR>
+noremap .s :FS<CR>
+noremap .c :FC .<CR>
 
 " Remove trailing whitespace on <leader>S
 nnoremap <leader>:call TrimWhiteSpace()<cr>:let @/=''<CR>
-
-" Rope
-noremap <leader>j :RopeGotoDefinition<CR>
-noremap <leader>r :RopeRename<CR>
-
-" Grep
-noremap <leader>g :Ack <C-R>=""<CR>
-noremap <leader>b :b <C-R>=""<CR>
 
 " Copy
 noremap YY "+y<CR>
@@ -569,13 +541,6 @@ noremap XX "+x<CR>
 
 " TODO: Take a look at this
 nnoremap   :call MatchCaseTag()
-
-" Termnal nav
-noremap ,z :bp<CR>
-noremap ,x :bn<CR>
-
-" Close buffer
-noremap ,d :bd<CR>
 
 " Clean search (highlight)
 noremap <leader>\ :noh<CR>
