@@ -91,6 +91,7 @@ Bundle 'vim-scripts/Gundo'
 Bundle 'vim-scripts/c.vim'
 Bundle 'vim-scripts/a.vim'
 Bundle 'vim-scripts/grep.vim'
+Bundle 'vim-scripts/CCTree'
 
 " Installing plugins the first time
 if iCanHazVundle == 0
@@ -151,7 +152,6 @@ endif
 set grepprg=ack
 
 set encoding=utf-8
-set fileencoding=utf-8
 set fileencodings=utf-8
 set bomb
 set ttyfast
@@ -185,8 +185,8 @@ set number
 " Menus I like :-)
 " This must happen before the syntax system is enabled
 aunmenu Help.
-aunmenu Window.
-let no_buffers_menu=1
+" aunmenu Window.
+" let no_buffers_menu=1
 set mousemodel=popup
 highlight BadWhitespace ctermbg=red guibg=red
 colorscheme molokai
@@ -452,6 +452,7 @@ noremap <Leader>sh :ConqueTerm bash --login<CR>
 noremap <Leader>h :split<CR>
 noremap <Leader>v :vsplit<CR>
 map <leader>d <c-w>c
+map <leader>w <c-w><c-w>
 
 " Git
 noremap <Leader>ga :!git add .<CR>
@@ -493,7 +494,7 @@ noremap ,d :bd<CR>
 
 " Opens an edit command with the path of the currently edited file filled in
 " Normal mode: <Leader>e
-noremap ,e :e <C-R>=expand("%:p:h") . "/" <CR>
+noremap ,c :e <C-R>=expand("%:p:h") . "/" <CR>
 
 " Set working directory
 nnoremap <leader>. :lcd %:p:h<CR>
