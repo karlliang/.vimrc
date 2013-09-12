@@ -73,7 +73,6 @@ Bundle 'jg/bufexplorer'
 " Syntex
 Bundle 'rodjek/vim-puppet'
 Bundle 'honza/vim-snippets'
-Bundle 'scrooloose/syntastic'
 
 " Web language
 Bundle 'lunaru/vim-less'
