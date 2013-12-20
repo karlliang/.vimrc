@@ -418,9 +418,9 @@ autocmd FileType html set omnifunc=htmlcomplete#CompleteTags
 autocmd FileType css set omnifunc=csscomplete#CompleteCSS
 
 "********** C/Obj-C/C++
-autocmd FileType c setlocal tabstop=4 softtabstop=4 shiftwidth=4 expandtab
-autocmd FileType cpp setlocal tabstop=4 softtabstop=4 shiftwidth=4 expandtab
-autocmd FileType objc setlocal tabstop=4 softtabstop=4 shiftwidth=4 expandtab
+autocmd FileType c setlocal tabstop=8 softtabstop=8 shiftwidth=8
+autocmd FileType cpp setlocal tabstop=8 softtabstop=8 shiftwidth=8
+autocmd FileType objc setlocal tabstop=8 softtabstop=8 shiftwidth=8
 
 "********** vim
 autocmd FileType vim setlocal expandtab shiftwidth=2 tabstop=8 softtabstop=2
