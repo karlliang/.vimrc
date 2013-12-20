@@ -74,22 +74,13 @@ Bundle 'jg/bufexplorer'
 Bundle 'rodjek/vim-puppet'
 Bundle 'honza/vim-snippets'
 
-" Web language
-Bundle 'lunaru/vim-less'
-Bundle 'vim-scripts/closetag.vim'
-Bundle 'avelino/london.vim'
-Bundle 'mattn/zencoding-vim'
-Bundle 'plasticboy/vim-markdown'
-
 " Others
 Bundle 'Lokaltog/vim-powerline'
 Bundle 'MarcWeber/vim-addon-mw-utils'
 Bundle 'tomtom/tlib_vim'
-Bundle 'carlobaldassi/ConqueTerm'
 Bundle 'vim-scripts/Gundo'
 Bundle 'vim-scripts/c.vim'
 Bundle 'vim-scripts/a.vim'
-Bundle 'vim-scripts/grep.vim'
 Bundle 'vim-scripts/CCTree'
 
 " Installing plugins the first time
