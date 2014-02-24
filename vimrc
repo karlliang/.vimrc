@@ -35,29 +35,23 @@ Bundle 'gmarik/vundle'
 "*****************************************************************************
 "{{{
 
-" Open files
-Bundle 'scrooloose/nerdtree'
-Bundle 'scrooloose/nerdcommenter'
-Bundle 'kien/ctrlp.vim'
-Bundle 'vim-scripts/FindFile'
-
 " Python
 Bundle 'fs111/pydoc.vim'
-Bundle 'vim-scripts/pytest.vim'
 Bundle 'Soares/python.vim'
 Bundle 'vim-scripts/pylint.vim'
-Bundle 'pyflakes.vim'
 Bundle 'nvie/vim-flake8'
-Bundle 'vim-scripts/pep8'
-Bundle 'hynek/vim-python-pep8-indent'
 
 " Theme
 Bundle 'vim-scripts/django.vim'
 Bundle 'avelino/flux.vim'
 Bundle 'tomasr/molokai'
+Bundle 'nelstrom/vim-mac-classic-theme'
+Bundle 'vim-scripts/Blueshift'
+Bundle 'mgutz/vim-colors'
 
-" Auto-completion
+" Text auto-completetion
 Bundle 'ervandew/supertab'
+" HTML auto-completetion
 Bundle 'garbas/vim-snipmate'
 
 " Taglist like
@@ -77,8 +71,8 @@ Bundle 'honza/vim-snippets'
 " Others
 Bundle 'Lokaltog/vim-powerline'
 Bundle 'MarcWeber/vim-addon-mw-utils'
+Bundle 'scrooloose/nerdcommenter'
 Bundle 'tomtom/tlib_vim'
-Bundle 'vim-scripts/Gundo'
 Bundle 'vim-scripts/c.vim'
 Bundle 'vim-scripts/a.vim'
 Bundle 'vim-scripts/CCTree'
@@ -130,7 +124,6 @@ set smartcase
 " Tab completion
 set wildmode=list:longest,list:full
 set wildignore+=*.o,*.obj,.git,*.rbc,.pyc,__pycache__
-let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
 
 " Remember last location in file
 if has("autocmd")
@@ -159,6 +152,22 @@ set fileformats=unix,dos,mac
 set backspace=indent,eol,start
 set showcmd
 
+" Load cscope files
+if has("cscope")
+  set csprg=/usr/bin/cscope
+  set csto=0
+  set cst
+  set nocsverb
+  " add any database in current directory
+  if filereadable("cscope.out")
+    cs add cscope.out
+  " else add database pointed to by environment
+  elseif $CSCOPE_DB != ""
+    cs add $CSCOPE_DB
+  endif
+  set csverb
+endif
+
 "}}}
 
 
@@ -174,12 +183,12 @@ set number
 
 " Menus I like :-)
 " This must happen before the syntax system is enabled
-aunmenu Help.
+" aunmenu Help.
 " aunmenu Window.
 " let no_buffers_menu=1
 set mousemodel=popup
 highlight BadWhitespace ctermbg=red guibg=red
-colorscheme molokai
+colorscheme idle
 set t_Co=256
 set cursorline
 set guioptions=egmrt
@@ -257,7 +266,7 @@ cab Q q
 "*****************************************************************************
 "{{{
 " Conf Avelino
-let g:snips_author = "Thiago Avelino"
+let g:snips_author = "Karl Liang"
 
 " python support
 " --------------
@@ -272,14 +281,7 @@ let html_no_rendering=1
 let javascript_enable_domhtmlcss=1
 let c_no_curly_error=1
 
-let g:closetag_default_xml=1
 let g:sparkupNextMapping='<c-l>'
-
-" NERDTree configuration
-let NERDTreeChDirMode=2
-let NERDTreeIgnore=['\.rbc$', '\~$', '\.pyc$', '\.db$', '\.sqlite$', '__pycache__']
-let NERDTreeSortOrder=['^__\.py$', '\/$', '*', '\.swp$',  '\.bak$', '\~$']
-let NERDTreeShowBookmarks=1
 
 " Command-T configuration
 "let g:CommandTMaxHeight=20
@@ -301,8 +303,6 @@ let g:flake8_builtins="_,apply"
 let g:flake8_ignore="E501,W293"
 let g:flake8_max_line_length=72
 
-let g:pyflakes_use_quickfix = 0
-
 "}}}
 
 
@@ -310,15 +310,6 @@ let g:pyflakes_use_quickfix = 0
 "                                  Function
 "*****************************************************************************
 "{{{
-fun! MatchCaseTag()
-    let ic = &ic
-    set noic
-    try
-        exe 'tjump ' . expand('')
-    finally
-       let &ic = ic
-    endtry
-endfun
 
 function s:setupWrapping()
   set wrap
@@ -349,13 +340,6 @@ function! GuiTabLabel()
 endfunction
 set guitablabel=%{GuiTabLabel()}
 
-" Removes trailing spaces
-function TrimWhiteSpace()
-  let @*=line(".")
-  %s/\s*$//e
-  ''
-:endfunction
-
 "}}}
 
 
@@ -370,10 +354,6 @@ autocmd BufEnter * :syntax sync fromstart
 autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
 " less comprez
 autocmd BufNewFile,BufRead *.less set filetype=less
-
-if has("gui_running")
-  autocmd BufWritePre * :call TrimWhiteSpace()
-endif
 
 " txt
 au BufRead,BufNewFile *.txt call s:setupWrapping()
@@ -402,11 +382,6 @@ autocmd FileType python set omnifunc=pythoncomplete#Complete
 "********** HTML
 autocmd BufNewFile,BufRead *.mako,*.mak,*.jinja2 setlocal ft=html
 autocmd FileType html,xhtml,xml,htmldjango,htmljinja,londonhtml,eruby,mako,haml,daml,css,tmpl setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
-autocmd FileType html,htmldjango,htmljinja,londonhtml,eruby,mako,haml,daml let b:closetag_html_style=1
-autocmd FileType html,xhtml,xml,htmldjango,htmljinja,londonhtml,eruby,mako,haml,daml source ~/.vim/bundle/closetag/plugin/closetag.vim
-" code completion
-autocmd FileType html set omnifunc=htmlcomplete#CompleteTags
-autocmd FileType css set omnifunc=csscomplete#CompleteCSS
 
 "********** C/Obj-C/C++
 autocmd FileType c setlocal tabstop=8 softtabstop=8 shiftwidth=8
@@ -435,25 +410,11 @@ autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
 noremap <C-K> :!python<CR>
 noremap <C-L> :!python %<CR>
 
-" ConqueTerm Shortcut
-noremap <Leader>sh :ConqueTerm bash --login<CR>
-
-" Split Screen
-noremap <Leader>h :split<CR>
-noremap <Leader>v :vsplit<CR>
-map <leader>d <c-w>c
-map <leader>w <c-w><c-w>
-
 " Git
-noremap <Leader>ga :!git add .<CR>
-noremap <Leader>gc :!git commit -m '<C-R>="'"<CR>
-noremap <Leader>gsh :!git push<CR>
+noremap <Leader>gc :Gcommit<CR>
 noremap <Leader>gs :Gstatus<CR>
 noremap <Leader>gd :Gvdiff<CR>
 noremap <Leader>gr :Gremove<CR>
-
-" NerdTree shortcuts
-noremap <Leader>n :NERDTreeToggle<CR>
 
 " Tag Code Navigation
 nnoremap <Leader>l :TagbarToggle<CR>
@@ -461,20 +422,14 @@ nnoremap <Leader>l :TagbarToggle<CR>
 " BufExplorer configuration
 nnoremap <Leader>b :BufExplorer<cr>
 
-" Tabs shortcuts
-noremap fj :tabnext<CR>
-noremap fk :tabprev<CR>
-noremap fc :tabnew<CR>
-noremap fd :tabclose<CR>
-
-" Opens a tab edit command with the path of the currently edited file filled in
-" Normal mode: <Leader>t
-noremap fe :tabe <C-R>=expand("%:p:h") . "/" <CR>
-
+noremap fs :w<CR>
 noremap fq :qa<CR>
-noremap fQ :qa!<CR>
-noremap fw :w<CR>
-noremap fW :w!<CR>
+
+" Split Screen
+noremap fw <c-w><c-w>
+noremap fh :split<CR>
+noremap fv :vsplit<CR>
+noremap fd :q<CR>
 
 " Termnal nav
 noremap ,k :bp<CR>
@@ -482,66 +437,36 @@ noremap ,j :bn<CR>
 noremap ,l :ls<CR>
 noremap ,d :bd<CR>
 
-" Opens an edit command with the path of the currently edited file filled in
-" Normal mode: <Leader>e
-noremap ,c :e <C-R>=expand("%:p:h") . "/" <CR>
-
-" Set working directory
-nnoremap <leader>. :lcd %:p:h<CR>
-
-" Inserts the path of the currently edited file into a command
-" ctrlp
-" Command mode: Ctrl+P
-cnoremap <C-P> <C-R>=expand("%:p:h") . "/" <CR>
-noremap ,b :CtrlPBuffer<CR>
-let g:ctrlp_map = ',e'
-
-" Bubble single lines
-nnoremap <C-Up> [e
-nnoremap <C-Down> ]e
-
-" Bubble multiple lines
-vnoremap <C-Up> [egv
-vnoremap <C-Down> ]egv
-
-" try to make possible to navigate within lines of wrapped lines
-nmap <Down> gj
-nmap <Up> gk
-
-" Optional key-map (> 7.3)
-" Gundo Toggler
-nnoremap <Leader>u :GundoToggle<CR>
-noremap <leader>c :GundoToggle<CR>
+" Vmap for maintain Visual Mode after shifting > and <
+vnoremap < <gv
+vnoremap > >gv
 
 " Find file
-noremap .f :FF<CR>
-noremap .s :FS<CR>
-noremap .c :FC .<CR>
+noremap ,f :!find <C-R>=expand("%:p:h") . "/"<CR> -name 
 
-" Remove trailing whitespace on <leader>S
-nnoremap <leader>:call TrimWhiteSpace()<cr>:let @/=''<CR>
+" Opens an edit command with the path of the currently edited file filled in
+" Normal mode: <Leader>e
+noremap ,e :e <C-R>=expand("%:p:h") . "/" <CR>
 
-" Copy
-noremap YY "+y<CR>
-
-" Paste
-noremap P "+gP<CR>
-
-" Cut
-noremap XX "+x<CR>
-
-" TODO: Take a look at this
-nnoremap   :call MatchCaseTag()
+" Set working directory
+nnoremap <Leader>. :lcd %:p:h<CR>
 
 " Clean search (highlight)
-noremap <leader>\ :noh<CR>
-
-" Vmap for maintain Visual Mode after shifting > and <
-vmap < <gv
-vmap > >gv
+noremap <Leader>\ :noh<CR>
 
 " ctags
-map <F8> :!/usr/local/bin/ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .<CR>
-map <leader>] g<c-]>
+noremap <Leader>\[ :!/usr/bin/ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .<CR>
+noremap <Leader>\] g<c-]>
+
+" cscope
+nnoremap <Leader>\a :cs add <C-R>=expand("%:p:h") . "/"<CR><CR>
+nnoremap <Leader>\s :cs find s <C-R>=expand("<cword>")<CR><CR>
+nnoremap <Leader>\g :cs find g <C-R>=expand("<cword>")<CR><CR>
+nnoremap <Leader>\c :cs find c <C-R>=expand("<cword>")<CR><CR>
+nnoremap <Leader>\t :cs find t <C-R>=expand("<cword>")<CR><CR>
+nnoremap <Leader>\e :cs find e <C-R>=expand("<cword>")<CR><CR>
+nnoremap <Leader>\f :cs find f <C-R>=expand("<cfile>")<CR><CR>
+nnoremap <Leader>\i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+nnoremap <Leader>\d :cs find d <C-R>=expand("<cword>")<CR><CR>
 
 "}}}
