@@ -200,14 +200,7 @@ if has("gui_running")
   endif
 else
   let g:CSApprox_loaded = 1
-
-  if $COLORTERM == 'gnome-terminal'
-    set term=gnome-256color
-  else
-    if $TERM == 'xterm'
-      set term=xterm-256color
-    endif
-  endif
+  set term=xterm-256color
 endif
 
 " Disable the pydoc preview window for the omni completion
