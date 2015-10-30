@@ -74,8 +74,9 @@ Bundle 'MarcWeber/vim-addon-mw-utils'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'tomtom/tlib_vim'
 Bundle 'vim-scripts/c.vim'
-Bundle 'vim-scripts/a.vim'
-Bundle 'vim-scripts/CCTree'
+
+" cscope
+Bundle 'vim-scripts/cecscope'
 
 " Installing plugins the first time
 if iCanHazVundle == 0
@@ -280,7 +281,7 @@ let g:sparkupNextMapping='<c-l>'
 "let g:CommandTMaxHeight=20
 
 " FindFile
-let g:FindFileIgnore = ['*.o', '*.pyc', '*.py~', '*.obj', '.git', '*.rbc', '*/tmp/*', '__pycache__']
+" let g:FindFileIgnore = ['*.o', '*.pyc', '*.py~', '*.obj', '.git', '*.rbc', '*/tmp/*', '__pycache__']
 
 " miniBuf
 let g:miniBufExplMapWindowNavVim = 1
@@ -332,6 +333,17 @@ function! GuiTabLabel()
     return label
 endfunction
 set guitablabel=%{GuiTabLabel()}
+
+" find files and populate the quickfix list
+fun! FindFiles(filename)
+  let error_file = tempname()
+  silent exe '!find . -name "'.a:filename.'" | xargs file | sed "s/:/:1:/" > '.error_file
+  set errorformat=%f:%l:%m
+  exe "cfile ". error_file
+  copen
+  call delete(error_file)
+endfun
+command! -nargs=1 FindFile call FindFiles(<q-args>)
 
 "}}}
 
@@ -404,10 +416,10 @@ noremap <C-K> :!python<CR>
 noremap <C-L> :!python %<CR>
 
 " Git
-noremap <Leader>gc :Gcommit<CR>
-noremap <Leader>gs :Gstatus<CR>
-noremap <Leader>gd :Gvdiff<CR>
-noremap <Leader>gr :Gremove<CR>
+nnoremap <Leader>gc :Gcommit<CR>
+nnoremap <Leader>gs :Gstatus<CR>
+nnoremap <Leader>gd :Gvdiff<CR>
+nnoremap <Leader>gr :Gremove<CR>
 
 " Tag Code Navigation
 nnoremap <Leader>l :TagbarToggle<CR>
@@ -435,7 +447,7 @@ vnoremap < <gv
 vnoremap > >gv
 
 " Find file
-noremap ,f :!find <C-R>=expand("%:p:h") . "/"<CR> -name 
+noremap ,f :FindFile 
 
 " Opens an edit command with the path of the currently edited file filled in
 " Normal mode: <Leader>e
@@ -444,22 +456,26 @@ noremap ,e :e <C-R>=expand("%:p:h") . "/" <CR>
 " Set working directory
 nnoremap <Leader>. :lcd %:p:h<CR>
 
-" Clean search (highlight)
-noremap <Leader>\ :noh<CR>
-
 " ctags
-noremap <Leader>\[ :!/usr/bin/ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .<CR>
-noremap <Leader>\] g<c-]>
+nnoremap <Leader>\[ :!/usr/bin/ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .<CR>
+nnoremap <Leader>\] g<c-]>
 
 " cscope
+nnoremap <Leader>\{ :!/usr/bin/cscope -Rbq<CR>
+nnoremap <Leader>\u :cs reset<CR>
 nnoremap <Leader>\a :cs add <C-R>=expand("%:p:h") . "/"<CR><CR>
-nnoremap <Leader>\s :cs find s <C-R>=expand("<cword>")<CR><CR>
-nnoremap <Leader>\g :cs find g <C-R>=expand("<cword>")<CR><CR>
-nnoremap <Leader>\c :cs find c <C-R>=expand("<cword>")<CR><CR>
-nnoremap <Leader>\t :cs find t <C-R>=expand("<cword>")<CR><CR>
-nnoremap <Leader>\e :cs find e <C-R>=expand("<cword>")<CR><CR>
-nnoremap <Leader>\f :cs find f <C-R>=expand("<cfile>")<CR><CR>
-nnoremap <Leader>\i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
-nnoremap <Leader>\d :cs find d <C-R>=expand("<cword>")<CR><CR>
+" find the caller of func, macro or enum
+nnoremap <Leader>\s :CSL s <C-R>=expand("<cword>")<CR><CR>
+" find definition of func, macro, enum
+nnoremap <Leader>\} :CSL g <C-R>=expand("<cword>")<CR><CR>
+nnoremap <Leader>\c :CSL c <C-R>=expand("<cword>")<CR><CR>
+" find the string
+nnoremap <Leader>\t :CSL t <C-R>=expand("<cword>")<CR><CR>
+nnoremap <Leader>\e :CSL e <C-R>=expand("<cword>")<CR><CR>
+" find the assinged file
+nnoremap <Leader>\f :CSL f <C-R>=expand("<cfile>")<CR><CR>
+nnoremap <Leader>\i :CSL i ^<C-R>=expand("<cfile>")<CR>$<CR>
+" find the func include what funcs
+nnoremap <Leader>\d :CSL d <C-R>=expand("<cword>")<CR><CR>
 
 "}}}
