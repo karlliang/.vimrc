@@ -38,26 +38,21 @@ Bundle 'gmarik/vundle'
 " Python
 Bundle 'fs111/pydoc.vim'
 Bundle 'Soares/python.vim'
-Bundle 'vim-scripts/pylint.vim'
-Bundle 'nvie/vim-flake8'
+Bundle 'andviro/flake8-vim'
 
 " Theme
-Bundle 'vim-scripts/django.vim'
 Bundle 'avelino/flux.vim'
 Bundle 'tomasr/molokai'
 Bundle 'nelstrom/vim-mac-classic-theme'
-Bundle 'vim-scripts/Blueshift'
 Bundle 'mgutz/vim-colors'
 
 " Text auto-completetion
-Bundle 'ervandew/supertab'
-" HTML auto-completetion
-Bundle 'garbas/vim-snipmate'
+Bundle 'Shougo/neocomplete.vim'
 
 " Taglist like
 Bundle 'majutsushi/tagbar'
 
-" Git ?
+" Git
 Bundle 'tpope/vim-fugitive'
 Bundle 'airblade/vim-gitgutter'
 
@@ -65,18 +60,25 @@ Bundle 'airblade/vim-gitgutter'
 Bundle 'jg/bufexplorer'
 
 " Syntex
-Bundle 'rodjek/vim-puppet'
 Bundle 'honza/vim-snippets'
+Bundle 'scrooloose/syntastic'
 
 " Others
 Bundle 'Lokaltog/vim-powerline'
 Bundle 'MarcWeber/vim-addon-mw-utils'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'tomtom/tlib_vim'
-Bundle 'vim-scripts/c.vim'
 
 " cscope
 Bundle 'vim-scripts/cecscope'
+
+" Marks
+Bundle 'vim-scripts/Marks-Browser'
+Bundle 'vim-scripts/ShowMarks'
+Bundle 'Yggdroot/vim-mark'
+
+" files list
+Bundle 'scrooloose/nerdtree'
 
 " Installing plugins the first time
 if iCanHazVundle == 0
@@ -133,7 +135,7 @@ if has("autocmd")
 endif
 
 " GREP
-set grepprg=ack
+set grepprg=ag
 
 set encoding=utf-8
 set fileencodings=utf-8
@@ -146,7 +148,7 @@ set nobackup
 set nowritebackup
 set noswapfile
 
-set sh=/bin/sh
+set sh=/bin/bash
 
 set nocompatible
 set fileformats=unix,dos,mac
@@ -189,7 +191,7 @@ set number
 " let no_buffers_menu=1
 set mousemodel=popup
 highlight BadWhitespace ctermbg=red guibg=red
-colorscheme idle
+colorscheme default
 set t_Co=256
 set cursorline
 set guioptions=egmrt
@@ -200,7 +202,6 @@ if has("gui_running")
     set transparency=7
   endif
 else
-  let g:CSApprox_loaded = 1
   set term=xterm-256color
 endif
 
@@ -275,27 +276,26 @@ let html_no_rendering=1
 let javascript_enable_domhtmlcss=1
 let c_no_curly_error=1
 
-let g:sparkupNextMapping='<c-l>'
-
-" Command-T configuration
-"let g:CommandTMaxHeight=20
-
-" FindFile
-" let g:FindFileIgnore = ['*.o', '*.pyc', '*.py~', '*.obj', '.git', '*.rbc', '*/tmp/*', '__pycache__']
-
-" miniBuf
-let g:miniBufExplMapWindowNavVim = 1
-let g:miniBufExplMapWindowNavArrows = 1
-let g:miniBufExplMapCTabSwitchBufs = 1
-let g:miniBufExplModSelTarget = 1
-
 " Powerline
 let g:Powerline_symbols = 'compatible'
 
-" Flake8
-let g:flake8_builtins="_,apply"
-let g:flake8_ignore="E501,W293"
-let g:flake8_max_line_length=72
+""""""""""""""""""""""""""""""
+" showmarks setting
+""""""""""""""""""""""""""""""
+" Enable ShowMarks
+let showmarks_enable = 1
+" Show which marks
+let showmarks_include = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+" Ignore help, quickfix, non-modifiable buffers
+let showmarks_ignore_type = "hqm"
+" Hilight lower & upper marks
+let showmarks_hlline_lower = 1
+let showmarks_hlline_upper = 1
+
+""""""""""""""""""""""""""""""
+" markbrowser setting
+""""""""""""""""""""""""""""""
+nmap <silent> <leader>mk :MarksBrowser<cr>
 
 "}}}
 
@@ -419,7 +419,7 @@ noremap <C-L> :!python %<CR>
 nnoremap <Leader>gc :Gcommit<CR>
 nnoremap <Leader>gs :Gstatus<CR>
 nnoremap <Leader>gd :Gvdiff<CR>
-nnoremap <Leader>gr :Gremove<CR>
+nnoremap <Leader>gb :Gblame<CR>
 
 " Tag Code Navigation
 nnoremap <Leader>l :TagbarToggle<CR>
@@ -427,55 +427,40 @@ nnoremap <Leader>l :TagbarToggle<CR>
 " BufExplorer configuration
 nnoremap <Leader>b :BufExplorer<cr>
 
-noremap fs :w<CR>
-noremap fq :qa<CR>
-
-" Split Screen
-noremap fw <c-w><c-w>
-noremap fh :split<CR>
-noremap fv :vsplit<CR>
-noremap fd :q<CR>
-
-" Termnal nav
-noremap ,k :bp<CR>
-noremap ,j :bn<CR>
-noremap ,l :ls<CR>
-noremap ,d :bd<CR>
-
 " Vmap for maintain Visual Mode after shifting > and <
 vnoremap < <gv
 vnoremap > >gv
 
 " Find file
-noremap ,f :FindFile 
+noremap <Leader>\f :FindFile 
+noremap <Leader>\x :close
 
 " Opens an edit command with the path of the currently edited file filled in
 " Normal mode: <Leader>e
-noremap ,e :e <C-R>=expand("%:p:h") . "/" <CR>
-
-" Set working directory
-nnoremap <Leader>. :lcd %:p:h<CR>
+noremap <Leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
 
 " ctags
-nnoremap <Leader>\[ :!/usr/bin/ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .<CR>
-nnoremap <Leader>\] g<c-]>
+nnoremap <Leader>[[ :!/usr/bin/ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .<CR>
+nnoremap <Leader>[] g<c-]>
 
 " cscope
-nnoremap <Leader>\{ :!/usr/bin/cscope -Rbq<CR>
-nnoremap <Leader>\u :cs reset<CR>
-nnoremap <Leader>\a :cs add <C-R>=expand("%:p:h") . "/"<CR><CR>
+nnoremap <Leader>]r :!/usr/bin/cscope -Rbq<CR>
+nnoremap <Leader>]u :cs reset<CR>
+nnoremap <Leader>]a :cs add <C-R>=expand("%:p:h") . "/"<CR><CR>
 " find the caller of func, macro or enum
-nnoremap <Leader>\s :CSL s <C-R>=expand("<cword>")<CR><CR>
+nnoremap <Leader>]s :CSL s <C-R>=expand("<cword>")<CR><CR>
 " find definition of func, macro, enum
-nnoremap <Leader>\} :CSL g <C-R>=expand("<cword>")<CR><CR>
-nnoremap <Leader>\c :CSL c <C-R>=expand("<cword>")<CR><CR>
+nnoremap <Leader>]g :CSL g <C-R>=expand("<cword>")<CR><CR>
+nnoremap <Leader>]c :CSL c <C-R>=expand("<cword>")<CR><CR>
 " find the string
-nnoremap <Leader>\t :CSL t <C-R>=expand("<cword>")<CR><CR>
-nnoremap <Leader>\e :CSL e <C-R>=expand("<cword>")<CR><CR>
-" find the assinged file
-nnoremap <Leader>\f :CSL f <C-R>=expand("<cfile>")<CR><CR>
-nnoremap <Leader>\i :CSL i ^<C-R>=expand("<cfile>")<CR>$<CR>
+nnoremap <Leader>]t :CSL t <C-R>=expand("<cword>")<CR><CR>
+nnoremap <Leader>]e :CSL e <C-R>=expand("<cword>")<CR><CR>
 " find the func include what funcs
-nnoremap <Leader>\d :CSL d <C-R>=expand("<cword>")<CR><CR>
+nnoremap <Leader>]d :CSL d <C-R>=expand("<cword>")<CR><CR>
+
+noremap z<Up> :wincmd k<CR>
+noremap z<Down> :wincmd j<CR>
+noremap z<Left> :wincmd h<CR>
+noremap z<Right> :wincmd l<CR>
 
 "}}}
