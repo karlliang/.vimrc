@@ -433,7 +433,7 @@ vnoremap > >gv
 
 " Find file
 noremap <Leader>\f :FindFile 
-noremap <Leader>\x :close
+noremap <Leader>\x :close<CR>
 
 " Opens an edit command with the path of the currently edited file filled in
 " Normal mode: <Leader>e
